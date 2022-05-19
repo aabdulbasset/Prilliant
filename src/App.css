@@ -1,0 +1,73 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Raleway', sans-serif;
+}
+html, body{
+  width: 100%;
+  height: 100%;
+}
+#mainDiv{
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  place-content: center;
+  align-items: center;
+  background-image: url('https://img.wallpapersafari.com/desktop/1680/1050/37/53/pYTK1m.jpg');
+}
+.card{
+  width: 30%;
+  height: 70%;
+  background-color: rgba(0, 137, 250, 0.822);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.35rem;
+
+}
+.small{
+  color:rgb(51, 51, 51)
+}
+.title{
+  text-align: center;
+  margin-top: 5vh;
+  
+}
+.clock{
+  font-size: 10rem;
+
+  display: flex;
+  flex-direction: row;
+  
+  justify-content: center;
+}
+.clock > *{
+  font-family: 'Akshar', sans-serif!important;
+}
+.quote{
+  margin:0 10%;
+  font-weight: bold;
+}
+button{
+  border: none;
+  width:5rem;
+  height:2rem;
+  border-radius: 0.25rem;
+  font-size:20px;
+}
+.buttons{
+  
+  margin-top:5rem;
+  display: flex;
+  gap:2rem;
+}
+@media screen and (max-width: 600px){
+  .card{
+    width: 70%;
+    height: 60%;
+  }
+}
+  
