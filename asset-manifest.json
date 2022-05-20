@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Prilliant/static/css/main.0fd0e5a2.css",
-    "main.js": "/Prilliant/static/js/main.a8a81263.js",
+    "main.js": "/Prilliant/static/js/main.2601b3be.js",
     "static/media/logo.svg": "/Prilliant/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/Prilliant/index.html",
     "main.0fd0e5a2.css.map": "/Prilliant/static/css/main.0fd0e5a2.css.map",
-    "main.a8a81263.js.map": "/Prilliant/static/js/main.a8a81263.js.map"
+    "main.2601b3be.js.map": "/Prilliant/static/js/main.2601b3be.js.map"
   },
   "entrypoints": [
     "static/css/main.0fd0e5a2.css",
-    "static/js/main.a8a81263.js"
+    "static/js/main.2601b3be.js"
   ]
 }
