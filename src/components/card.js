@@ -1,24 +1,26 @@
 'use-strict'
 import axios from 'axios'
 import {useState,useEffect} from 'react'
+import usePrevious from '../hooks/usePrevious'
+import worker_script from '../workers/timer';
 Number.prototype.zeroPad = function() {
     return ('0'+this).slice(-2);
  };
 export default function Card(props){
     const [quote,setQuote] = useState("")
+    const [running, setRunning ] = useState(0)
     const [color,setColor] = useState("rgba(0, 137, 250, 0.822)")
     const [stage,setStage] = useState(1)
-    const [intervalid,setIntervalID] = useState(0)
+    const [time,setTime] = useState(0)
+    const [worker,setWorker] = useState(0);
 
-    useEffect(()=>{
-        document.querySelectorAll("button").forEach(item=>{
-            item.addEventListener("click",(e)=>{
-                buttonHandler(e)
-            })
-        })
+    useEffect(()=>{ 
+        
         const getQuote = async ()=>{
-                const reply = await axios.get("https://zenquotes.io/api/random")
-                setQuote(reply.data[0].q)
+                const reply = await axios.get("https://type.fit/api/quotes")
+                let index = Math.floor(Math.random()*(reply.data.length))
+                setQuote(reply.data[index])
+                
         }
 
         getQuote()
@@ -27,60 +29,86 @@ export default function Card(props){
             getQuote()
         },60000)
     },[])
-    const buttonHandler = (e) =>{
-        if(e.target.classList.contains("start")){
-            setStage(1)
-        }else if(e.target.classList.contains("stop")){
-            setStage(0)
-        }
-    }
-    useEffect(()=>{
-        console.log(stage)
-        if(stage==1){
-            setColor("rgba(0, 137, 250, 0.822)")
-            document.getElementById("minutes").innerText="24"
-            document.getElementById("seconds").innerText="59"
-            let id = setInterval(()=>{
-                let minutes = document.getElementById("minutes")
-                let seconds = document.getElementById("seconds")
-                let minutesNO = Number(minutes.innerText)
-                let secondsNO = Number(seconds.innerText)
-                if(minutesNO==0 && secondsNO ==0 ){
-                    setStage(0)
-                }else if(secondsNO ==0){
-                    minutes.innerText = (minutesNO-1).zeroPad()
-                    seconds.innerText = "59"
-                }else{
-                    
-                    seconds.innerText = (secondsNO-1).zeroPad()
-                }
 
-            },1000)
-            setIntervalID(id)
+    useEffect(()=>{
+
+        if(running){
+            setWorker(()=>{
+                let worker = new Worker(worker_script)
+                worker.postMessage(time)
+                worker.onmessage = e=>{
+    
+                    setTime(e.data)
+                    if(e.data==0){
+                        setStage(prev=>prev^1)
+                        
+                    }
+                }
+                return worker;
+            })
+
+        }else{
+            if(worker !==0){
+                worker.terminate()
+            }
         }
-        if(stage == 0){
-            
-            clearInterval(intervalid)
-            setColor("rgba(245, 40, 52, 1)")
+    },[running])
+    let prevStage = usePrevious(stage)
+    useEffect(()=>{
+        const audio = new Audio("https://filebin.net/j38aevo4ka5r6ftu/notification_sound.mp3")
+        if(prevStage !== stage){
+            audio.play()
+        }
+        if(stage==1){
+            setTime(()=>{
+                let time = 25*60;
+                if(worker !== 0){
+                    worker.postMessage(time)
+                }
+                return time
+            })
+            setColor("rgba(0, 137, 250, 0.822)")
+        }else{
+            setTime(()=>{
+                let time = 5*60;
+                if(worker !== 0){
+                    worker.postMessage(time)
+                }
+                return time
+            })
+
+            setColor("rgba(245, 32, 53, 0.8)")
         }
     },[stage])
 
+
+
+    function manageButton(e){
+        if(e.target.classList.contains("start")){
+            setRunning(1)
+            
+        }else{
+            setRunning(0)
+        }
+    }
     return(
         <div className="card" style={{backgroundColor : color}}>
             <div className="title"><h1>Prilliant</h1> <p className="small">Brilliant pomodoro timer</p></div>
             <div className="clock">
-                <div id="minutes">24</div>
+                <div id="minutes" >{(Math.floor(time/60)).zeroPad()}</div>
                 <div className="separator">:</div>
-                <div id="seconds">59</div>
+                <div id="seconds">{Math.round(time%60).zeroPad()}</div>
             </div>
             <div className="quote">
-                <p>“{quote}”</p>
+                <p>“{quote.text}”</p>
+                <p style={{textAlign:"center",marginTop:"10px"}}>- {quote.author}</p>
             </div>
             <div className="buttons">
-                <button className="start">Start</button>
-                <button className="stop">Stop</button>
+                <button className="start" onClick={manageButton}>Start</button>
+                <button className="stop" onClick={manageButton}>Stop</button>
             
             </div>
+            
         </div>
     )
 }

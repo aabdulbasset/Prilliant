@@ -20,8 +20,8 @@ html, body{
 }
 .card{
   width: 30%;
-  height: 70%;
-  background-color: rgba(0, 137, 250, 0.822);
+  height: fit-content;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,18 +37,16 @@ html, body{
   
 }
 .clock{
-  font-size: 10rem;
-
+  font-size: 10vw;
   display: flex;
   flex-direction: row;
-  
   justify-content: center;
 }
 .clock > *{
   font-family: 'Akshar', sans-serif!important;
 }
 .quote{
-  margin:0 10%;
+  margin:5vh 10%;
   font-weight: bold;
 }
 button{
@@ -56,18 +54,21 @@ button{
   width:5rem;
   height:2rem;
   border-radius: 0.25rem;
-  font-size:20px;
+  font-size:24px;
 }
 .buttons{
   
-  margin-top:5rem;
+  margin:5vh 0;
   display: flex;
   gap:2rem;
 }
-@media screen and (max-width: 600px){
+@media screen and (max-width: 768px){
   .card{
     width: 70%;
-    height: 60%;
+    
+  }
+  .clock{
+    font-size:10vh;
   }
 }
   
